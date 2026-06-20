@@ -43,7 +43,7 @@ dot2 onPC (MIDI Out) ➔ dot2_to_python ➔ main.py ➔ APC mini mk2
 ## Step 2: Installation
 
 1. Clone the repository with:
-   ```text
+   ```bash
    git clone https://github.com/Noah-Haefele/akai-apc-mini-mk2-dot2-onpc.git
    ```
 2. Navigate to the project directory.
@@ -113,6 +113,10 @@ MidiNote 12 60
 Run the script using the command:
 ```bash
 python main.py
+```
+Run the script with logging using the command:
+```bash
+python main.py -d
 ```
 
 ### Safe Termination
