@@ -70,6 +70,16 @@ def startup_animation(midi_out):
     time.sleep(2)
     set_all_pads(midi_out, OFF)
 
+def led_listener(midi_in, midi_out):
+    try:
+        while not stop_event.is_set():
+            for msg in midi_in.iter_pending():
+                if msg.type == "note_on":
+                    midi_out.send(mido.Message("note_on", channel=MIDI_CHANNEL, note=msg.note, velocity=msg.velocity))
+            time.sleep(0.005)
+    except Exception:
+        traceback.print_exc()
+
 
 # Button
 def button_translator(midi_in, midi_out, led):
@@ -98,7 +108,9 @@ def main():
     startup_animation(midi_out_led)
 
     t_btn = Thread(target=button_translator, args=(midi_in_button, midi_out_button, midi_out_led))
+    t_led = Thread(target=led_listener, args=(midi_in_led, midi_out_led))
     t_btn.start()
+    t_led.start()
 
     print("system running (idle)...")
     
