@@ -119,6 +119,16 @@ def main():
             time.sleep(1)
     except KeyboardInterrupt:
         print("\nProgram stopped...")
+        stop_event.set()                       # Signal threads to stop looping
+        t_led.join()                           # Wait for LED thread to finish
+        t_btn.join()                           # Wait for button thread to finish
+        set_all_pads(midi_out_led, OFF)        # Turn off all pads on exit
+        midi_in_led.close()                    # Safely release MIDI ports
+        midi_out_led.close()
+        midi_in_button.close()
+        midi_out_button.close()
+        print("midi-ports successfully closed")
+        exit()
 
 if __name__ == "__main__":
     main()
