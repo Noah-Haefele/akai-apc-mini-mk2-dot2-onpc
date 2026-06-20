@@ -1,6 +1,7 @@
 import mido
 import time
 import traceback
+import sys
 from threading import Event, Thread
 
 
@@ -46,9 +47,10 @@ def open_ports():
         print("midi-ports successfully opened")
         return midi_in_led, midi_out_led, midi_in_button, midi_out_button
     except Exception as e:
-        print("error while opening midi-ports:", e)
+        print("\nerror while opening midi-ports:", e)
         print_available_ports()
-        raise
+        print("\nClosing script due to missing ports...")
+        sys.exit(1)
 
 
 # Led
