@@ -3,7 +3,9 @@ import time
 import traceback
 import sys
 from threading import Event, Thread
+from colorama import init, Fore, Style
 
+init(autoreset=True)
 
 # Config
 input_port_led = "dot2_to_python" # Midi input for led control from dot2
@@ -33,10 +35,10 @@ animation_sequence = [10, 14, 13, 12, 20, 29, 38, 46, 53, 44]
 def print_available_ports():
     print("\navailable inputs:")
     for port in mido.get_input_names():
-        print(" ->", port)
+        print(Fore.CYAN + " -> " + Fore.RESET + port)
     print("\navailable output:")
     for port in mido.get_output_names():
-        print(" ->", port)
+        print(Fore.CYAN + " -> " + Fore.RESET + port)
 
 def open_ports():
     try:
@@ -44,12 +46,12 @@ def open_ports():
         midi_out_led = mido.open_output(output_port_led)
         midi_in_button = mido.open_input(input_port_button)
         midi_out_button = mido.open_output(output_port_button)
-        print("midi-ports successfully opened")
+        print(Fore.GREEN + "midi-ports successfully opened")
         return midi_in_led, midi_out_led, midi_in_button, midi_out_button
     except Exception as e:
-        print("\nerror while opening midi-ports:", e)
+        print(Fore.RED + "\nerror while opening midi-ports:", e)
         print_available_ports()
-        print("\nClosing script due to missing ports...")
+        print(Fore.YELLOW + "\nClosing script due to missing ports...")
         sys.exit(1)
 
 
