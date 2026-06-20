@@ -1,6 +1,7 @@
 import mido
 import time
 import traceback
+from threading import Event, Thread
 
 
 # Config
@@ -16,6 +17,9 @@ OFF = 0
 RED = 5
 YELLOW = 13
 WHITE = 3
+
+ihex_ohex = {48: 99, 49: 100, 50: 101, 51: 102, 52: 103, 53: 104, 54: 105, 55: 106, 56: 107}
+stop_event = Event()
 
 # Animation
 ANIMATION_DELAY = 0.15
@@ -67,10 +71,34 @@ def startup_animation(midi_out):
     set_all_pads(midi_out, OFF)
 
 
+# Button
+def button_translator(midi_in, midi_out, led):
+    try:
+        while not stop_event.is_set():
+            for msg in midi_in.iter_pending():
+                # Map control changes (faders) to specific notes if defined
+                if msg.type == "control_change" and msg.control in ihex_ohex:
+                    midi_out.send(mido.Message("note_on", note=ihex_ohex[msg.control], velocity=msg.value, channel=msg.channel))
+                    print("Fader: " + str(msg))
+                else:
+                    if msg.type == "note_on":
+                        midi_out.send(mido.Message("note_on", note=msg.note, velocity=msg.velocity, channel=msg.channel))
+                        print(msg)
+                    elif msg.type == "note_off":
+                        midi_out.send(mido.Message("note_off", note=msg.note, velocity=msg.velocity, channel=msg.channel))
+                        print(msg)
+            time.sleep(0.005)
+    except Exception:
+        traceback.print_exc()
+
+
 # Main
 def main():
     midi_in_led, midi_out_led, midi_in_button, midi_out_button = open_ports()
     startup_animation(midi_out_led)
+
+    t_btn = Thread(target=button_translator, args=(midi_in_button, midi_out_button, midi_out_led))
+    t_btn.start()
 
     print("system running (idle)...")
     
