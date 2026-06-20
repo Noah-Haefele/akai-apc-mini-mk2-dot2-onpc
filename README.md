@@ -71,7 +71,7 @@ Open main.py in a text editor to verify or edit the MIDI port variables to match
 | `output_port_button` | `"python_to_dot2"` | Output port forwarding control triggers to dot2 |
 
 > [!WARNING]
-> **Port Name Differences**
+> **Port Name Differences**  
 > Windows dynamically assigns numbers to MIDI devices. Depending on your USB port, your APC mini might show up as `APC mini mk2 2` or `0` instead of `1`. 
 > **How to fix it if the script crashes:**
 > If the script cannot connect, look at the console window. The script will automatically print a list of all **"available inputs"** and **"available outputs"** detected on your PC. Simply copy the exact name shown there and paste it into your `main.py` variables.
