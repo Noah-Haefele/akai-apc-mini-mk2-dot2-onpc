@@ -2,10 +2,18 @@ import mido
 import time
 import traceback
 import sys
+import argparse
 from threading import Event, Thread
-from colorama import init, Fore, Style
+from colorama import init, Fore
 
+# colorama config
 init(autoreset=True)
+
+# argparse config
+parser = argparse.ArgumentParser()
+parser.add_argument('-d', '--debug', action='store_true', help='Enable debug logging for button presses and fader movements')
+args = parser.parse_args()
+DEBUG = args.debug
 
 # Config
 input_port_led = "dot2_to_python" # Midi input for led control from dot2
@@ -93,14 +101,17 @@ def button_translator(midi_in, midi_out, led):
                 # Map control changes (faders) to specific notes if defined
                 if msg.type == "control_change" and msg.control in ihex_ohex:
                     midi_out.send(mido.Message("note_on", note=ihex_ohex[msg.control], velocity=msg.value, channel=msg.channel))
-                    print("Fader: " + str(msg))
+                    if DEBUG:
+                        print("Fader: " + str(msg))
                 else:
                     if msg.type == "note_on":
                         midi_out.send(mido.Message("note_on", note=msg.note, velocity=msg.velocity, channel=msg.channel))
-                        print(msg)
+                        if DEBUG:
+                            print(msg)
                     elif msg.type == "note_off":
                         midi_out.send(mido.Message("note_off", note=msg.note, velocity=msg.velocity, channel=msg.channel))
-                        print(msg)
+                        if DEBUG:
+                            print(msg)
             time.sleep(0.005)
     except Exception:
         traceback.print_exc()
