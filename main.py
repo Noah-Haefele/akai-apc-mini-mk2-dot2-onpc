@@ -5,11 +5,11 @@ from threading import Event, Thread
 
 
 # Config
-input_port_led = "dot2_to_Python 3"
-output_port_led = "APC mini mk2 1"
+input_port_led = "dot2_to_Python" # Midi input for led control from dot2
+output_port_led = "APC mini mk2 1" # Midi output for led control to APC mini mk2
 
-input_port_button = "APC mini mk2 0"
-output_port_button = "loopThruAPC 3"
+input_port_button = "APC mini mk2 0" # Midi input for buttons and faders from APC mini mk2
+output_port_button = "python_to_dot2" # Midi output for buttons and faders to dot2
 
 MIDI_CHANNEL = 6
 # Colors
