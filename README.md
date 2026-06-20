@@ -103,7 +103,7 @@ MidiNote 12 60
 ```
 
 * **`12`**: Represents the physical pad number (Note) on the APC mini mk2 grid.
-* **`60`**: Represents the color of the LED
+* **`60`**: Represents the color of the LED where 0 equals OFF
 
 ---
 
